@@ -1,0 +1,187 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  googleId      String?   @unique
+  avatarUrl     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  dmCampaigns   Campaign[] @relation("CampaignDM")
+  characters    Character[]
+  revealedHexes PlayerRevealedHex[]
+  sessionAttendances SessionAttendance[]
+
+  @@index([email])
+  @@index([googleId])
+}
+
+model Campaign {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  dmId        String
+  activeMapId String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  dm          User      @relation("CampaignDM", fields: [dmId], references: [id], onDelete: Cascade)
+  characters  Character[]
+  maps        Map[]
+  sessions    Session[]
+  revealedHexes PlayerRevealedHex[]
+
+  @@index([dmId])
+}
+
+model Character {
+  id          String    @id @default(cuid())
+  name        String
+  race        String
+  class       String
+  level       Int       @default(1)
+  playerId    String
+  campaignId  String
+
+  // Stats
+  strength      Int @default(10)
+  dexterity     Int @default(10)
+  constitution  Int @default(10)
+  intelligence  Int @default(10)
+  wisdom        Int @default(10)
+  charisma      Int @default(10)
+
+  // Derived stats
+  maxHp         Int @default(10)
+  currentHp     Int @default(10)
+  armorClass    Int @default(10)
+  proficiencyBonus Int @default(2)
+
+  // Character data (stored as JSON for flexibility)
+  skills        Json?  // Selected skills and proficiencies
+  equipment     Json?  // Inventory
+  spells        Json?  // Known spells
+  features      Json?  // Class/race features
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  player      User      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  campaign    Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([playerId])
+  @@index([campaignId])
+}
+
+model Map {
+  id          String    @id @default(cuid())
+  campaignId  String
+  name        String
+  description String?
+  hexSize     Int       @default(6) // Miles per hex
+
+  // Terrain data stored as JSON
+  // Format: { "x,y": { terrain: "plains", elevation: 100 } }
+  hexData     Json      @default("{}")
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  campaign    Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  partyPositions PartyPosition[]
+
+  @@index([campaignId])
+}
+
+model Session {
+  id            String    @id @default(cuid())
+  campaignId    String
+  sessionNumber Int
+  sessionDate   DateTime  @default(now())
+  isActive      Boolean   @default(false)
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  campaign      Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  attendances   SessionAttendance[]
+  revealedHexes PlayerRevealedHex[]
+
+  @@unique([campaignId, sessionNumber])
+  @@index([campaignId])
+  @@index([isActive])
+}
+
+model SessionAttendance {
+  id          String    @id @default(cuid())
+  sessionId   String
+  playerId    String
+  connectedAt DateTime  @default(now())
+  isOnline    Boolean   @default(true)
+  disconnectedAt DateTime?
+
+  // Relations
+  session     Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  player      User      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, playerId])
+  @@index([sessionId])
+  @@index([playerId])
+  @@index([isOnline])
+}
+
+model PartyPosition {
+  id          String    @id @default(cuid())
+  campaignId  String    @unique
+  mapId       String
+  hexX        Int
+  hexY        Int
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  map         Map       @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  @@index([mapId])
+}
+
+model PlayerRevealedHex {
+  id          String    @id @default(cuid())
+  playerId    String
+  campaignId  String
+  sessionId   String
+  hexX        Int
+  hexY        Int
+  revealedAt  DateTime  @default(now())
+
+  // Relations
+  player      User      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  campaign    Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  session     Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, campaignId, hexX, hexY])
+  @@index([playerId, campaignId])
+  @@index([sessionId])
+}
+
+model TerrainVisibilityRule {
+  id              String  @id @default(cuid())
+  terrainType     String  @unique
+  visibilityRange Int     @default(1) // Number of hexes visible (1-3)
+  description     String?
+}
