@@ -92,7 +92,17 @@ model Map {
   campaignId  String
   name        String
   description String?
+
+  // Map image (PNG)
+  imageUrl    String    // URL or path to PNG map image
+  imageWidth  Int       @default(1000) // Width in pixels
+  imageHeight Int       @default(1000) // Height in pixels
+
+  // Hex configuration
   hexSize     Int       @default(6) // Miles per hex
+  hexColumns  Int       @default(20) // Number of hex columns
+  hexRows     Int       @default(20) // Number of hex rows
+  hexOrientation String @default("flat") // "flat" or "pointy"
 
   // Terrain data stored as JSON
   // Format: { "x,y": { terrain: "plains", elevation: 100 } }

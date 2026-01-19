@@ -94,7 +94,13 @@ export interface Map {
   campaignId: string;
   name: string;
   description: string | null;
+  imageUrl: string;
+  imageWidth: number;
+  imageHeight: number;
   hexSize: number;
+  hexColumns: number;
+  hexRows: number;
+  hexOrientation: string;
   hexData: Record<string, { terrain: string; elevation?: number }>;
   createdAt: string;
   updatedAt: string;

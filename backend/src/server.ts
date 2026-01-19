@@ -9,6 +9,8 @@ import { initializeSocket } from './config/socket';
 // Import routes
 import authRoutes from './routes/auth';
 import sessionRoutes from './routes/sessions';
+import campaignRoutes from './routes/campaigns';
+import mapRoutes from './routes/maps';
 
 // Load environment variables
 dotenv.config();
@@ -55,13 +57,17 @@ app.get('/', (req: Request, res: Response) => {
     version: '1.0.0',
     endpoints: {
       auth: '/auth',
+      campaigns: '/api/campaigns',
       sessions: '/api/sessions',
+      maps: '/api/maps',
     },
   });
 });
 
 app.use('/auth', authRoutes);
+app.use('/api/campaigns', campaignRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/maps', mapRoutes);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
