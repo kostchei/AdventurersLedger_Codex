@@ -7,7 +7,9 @@ The app is ready for Google Login, but you must provide the keys from your own G
 
 1.  **Get Keys**: Go to the [Google Cloud Console](https://console.cloud.google.com/apis/credentials).
 2.  **Create Client ID**: Create an "OAuth 2.0 Client ID" for a Web Application.
-3.  **Set Redirect URL**: Add `http://localhost:8090/api/oauth2-redirect` (or your public tunnel URL) to the Authorized Redirect URIs.
+3.  **Set Redirect URLs**: Add **both** of these to the "Authorized redirect URIs" in Google Console:
+    - `http://localhost:8090/api/oauth2-redirect` (For local testing)
+    - `https://api.talekeeper.org/api/oauth2-redirect` (For your live domain)
 4.  **Update PocketBase**:
     - Open your Admin Dashboard (`http://127.0.0.1:8090/_/`).
     - Go to **Settings > Auth providers > Google**.
@@ -17,8 +19,13 @@ The app is ready for Google Login, but you must provide the keys from your own G
 To let your players access the map while you're offline or away:
 
 1.  The `cloudflared.exe` is already in your `bin` folder.
-2.  The `Start-TaleKeeper.ps1` script will automatically try to run the tunnel using `pocketbase/cloudflared/config.yml`.
-3.  **Note**: You will need to have a Cloudflare account and a tunnel created to finalize the `tunnel_id` in that config file.
+2.  **Cloudflare Dashboard Setup**:
+    - Create a new Tunnel (e.g., "TaleKeeper-Local").
+    - In **Public Hostname**, map `api.talekeeper.org` to `http://localhost:8090`.
+3.  **Local Config**:
+    - Downlaod your tunnel credentials (`.json` file).
+    - Rename it to `credentials.json` and place it in `pocketbase/cloudflared/`.
+    - Edit `pocketbase/cloudflared/config.yml` and replace `<TUNNEL_ID>` with your UUID.
 
 ## 3. World Management (DM Only)
 You now have two powerful ways to manage the world:

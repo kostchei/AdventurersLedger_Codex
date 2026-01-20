@@ -2,7 +2,7 @@
 # This script launches the PocketBase backend and Cloudflare Tunnel
 
 $POCKETBASE_PATH = "$PSScriptRoot\..\bin\pocketbase.exe"
-$CLOUDFLARED_PATH = "$PSScriptRoot\..\bin\cloudflared.exe"
+$CLOUDFLARED_PATH = "$PSScriptRoot\..\cloudflared\cloudflared.exe"
 $CONFIG_PATH = "$PSScriptRoot\..\cloudflared\config.yml"
 $DB_DIR = "$PSScriptRoot\..\pb_data"
 

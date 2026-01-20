@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
@@ -7,6 +7,8 @@ export default function Login() {
   const navigate = useNavigate();
   const { isAuthenticated, loginWithGoogle } = useAuthStore();
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
@@ -14,11 +16,13 @@ export default function Login() {
   }, [isAuthenticated, navigate]);
 
   const handleGoogleLogin = async () => {
+    setError(null);
     try {
       await loginWithGoogle();
       navigate('/dashboard');
-    } catch (error) {
-      console.error('Login failed:', error);
+    } catch (err: any) {
+      console.error('Login failed:', err);
+      setError(err.message || 'Login failed. Please ensure Google OAuth is configured in PocketBase.');
     }
   };
 
@@ -29,6 +33,12 @@ export default function Login() {
           <h1 className="text-4xl font-bold text-white mb-2">Adventurer's Ledger</h1>
           <p className="text-gray-400">Track your D&D campaigns and explore hex maps</p>
         </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
+            {error}
+          </div>
+        )}
 
         <div className="space-y-4">
           <button
