@@ -8,7 +8,22 @@
       "Bash(./cloudflared.exe tunnel:*)",
       "Bash(nslookup:*)",
       "Bash(npx wrangler pages deploy:*)",
-      "Bash(az --version:*)"
+      "Bash(az --version:*)",
+      "Bash(git commit:*)",
+      "Bash(gh run list:*)",
+      "Bash(curl:*)",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(./bin/pocketbase.exe serve:*)",
+      "Bash(sqlite3:*)",
+      "Bash(npm run dev:*)",
+      "Bash(cmd.exe //c \"type C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Code-AdventurersLedger-Check-AdventurersLedger-Codex\\\\tasks\\\\b44cceb.output\")",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"Create-DesktopShortcut.ps1\")"
+    ],
+    "additionalDirectories": [
+      "d:\\Code\\AdventurersLedger\\Check\\AdventurersLedger_Codex\\.github\\workflows"
     ]
   }
 }
