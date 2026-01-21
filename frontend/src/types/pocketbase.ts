@@ -1,5 +1,3 @@
-import type { RecordModel } from 'pocketbase';
-
 /**
  * Base interface for PocketBase records
  */

@@ -13,7 +13,6 @@ import type {
   CreateWorldState,
   CreateDecal,
   UpdateUserStats,
-  UpdateFogOfWar,
   UpdateWorldState,
   UpdateDecal,
 } from '../types/pocketbase';
