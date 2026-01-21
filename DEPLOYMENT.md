@@ -186,3 +186,50 @@ Deployment happens automatically via GitHub Actions.
 - **Domain (talekeeper.org):** ~$10-15/year
 
 **Total monthly cost:** $0 (excluding domain renewal)
+
+
+
+
+Quick Setup (5 minutes):
+1. Create New Static Web App
+Azure Portal → Create Resource → Static Web App
+
+Quick settings:
+
+Name: talekeeper (or your preferred name)
+Region: Choose closest to you
+GitHub repo: kostchei/AdventurersLedger_Codex
+Branch: main
+Build presets: Custom
+App location: /frontend
+Output location: dist
+2. Add Deployment Token to GitHub
+After creation:
+
+Copy the deployment token from Azure
+GitHub repo → Settings → Secrets → New secret
+Name: AZURE_STATIC_WEB_APPS_API_TOKEN
+Paste token → Save
+3. Trigger Deployment
+The workflow is already in the repo, so just trigger it:
+
+Bash Trigger deployment workflow
+IN
+git commit --allow-empty -m "Trigger Azure Static Web App deployment" && git push origin main
+
+OUT
+[main 8516463] Trigger Azure Static Web App deployment
+To https://github.com/kostchei/AdventurersLedger_Codex.git
+   61b0d62..8516463  main -> main
+4. Configure Custom Domain (After deployment succeeds)
+In your new Static Web App:
+
+Add custom domain: talekeeper.org
+Update Cloudflare DNS CNAME to point to your Azure app
+That's it! The workflow will handle:
+
+✅ Building the frontend
+✅ Setting VITE_PB_URL=https://api.talekeeper.org
+✅ Deploying to Azure
+✅ Auto-deploying on future pushes
+Once you add the token and the workflow runs, your app will be live at <your-app-name>.azurestaticapps.net (and then talekeeper.org after custom domain setup).

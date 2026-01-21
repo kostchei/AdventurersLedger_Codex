@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(where:*)",
+      "Bash(./cloudflared.exe tunnel info:*)",
+      "Bash(./cloudflared.exe tunnel run:*)",
+      "Bash(./cloudflared.exe tunnel:*)",
+      "Bash(nslookup:*)",
+      "Bash(npx wrangler pages deploy:*)",
+      "Bash(az --version:*)"
     ]
   }
 }
