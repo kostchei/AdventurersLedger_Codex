@@ -6,6 +6,7 @@ export interface User {
   email: string;
   name: string | null;
   avatarUrl: string | null;
+  global_role?: 'USER' | 'GM' | 'ADMIN';
   createdAt: string;
 }
 

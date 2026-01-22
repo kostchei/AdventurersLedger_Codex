@@ -77,14 +77,33 @@ export default function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Create Campaign Card */}
+            {/* Create Campaign Card */}
             <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="card hover:shadow-xl transition-shadow border-2 border-dashed border-gray-600 flex items-center justify-center min-h-[200px] hover:border-primary-500"
+              onClick={() => {
+                if (user?.global_role === 'GM' || user?.global_role === 'ADMIN') {
+                  setIsCreateModalOpen(true);
+                }
+              }}
+              className={`card hover:shadow-xl transition-shadow border-2 border-dashed border-gray-600 flex items-center justify-center min-h-[200px] ${user?.global_role === 'GM' || user?.global_role === 'ADMIN'
+                  ? 'hover:border-primary-500 cursor-pointer'
+                  : 'opacity-50 cursor-not-allowed hover:border-red-500'
+                }`}
+              title={
+                user?.global_role === 'GM' || user?.global_role === 'ADMIN'
+                  ? 'Start a new adventure'
+                  : 'You must be a Game Master to create campaigns'
+              }
             >
               <div className="text-center">
-                <div className="text-5xl mb-3">+</div>
+                <div className="text-5xl mb-3">
+                  {user?.global_role === 'GM' || user?.global_role === 'ADMIN' ? '+' : '🔒'}
+                </div>
                 <h3 className="text-xl font-semibold text-white mb-2">Create Campaign</h3>
-                <p className="text-gray-400 text-sm">Start a new adventure</p>
+                <p className="text-gray-400 text-sm">
+                  {user?.global_role === 'GM' || user?.global_role === 'ADMIN'
+                    ? 'Start a new adventure'
+                    : 'GM Access Required'}
+                </p>
               </div>
             </button>
 

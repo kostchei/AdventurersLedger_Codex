@@ -64,7 +64,9 @@ export default function CreateCampaignModal({ isOpen, onClose }: CreateCampaignM
 
           {createMutation.isError && (
             <div className="text-red-500 text-sm">
-              Failed to create campaign. Please try again.
+              {createMutation.error instanceof Error && createMutation.error.message.includes('403')
+                ? 'You do not have permission to create campaigns.'
+                : 'Failed to create campaign. Please try again.'}
             </div>
           )}
 
