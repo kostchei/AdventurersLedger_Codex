@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="4" failures="1" errors="0" time="0.1359828">
-    <testsuite name="test/globalRoles.test.ts" timestamp="2026-01-22T13:04:15.698Z" hostname="DESKTOP-J05866Q" tests="4" failures="1" errors="0" skipped="0" time="0.1359828">
-        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should connect to PocketBase" time="0.0201823">
-        </testcase>
-        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should allow user registration (default role USER)" time="0.114405">
-            <system-err>
-Registration failed: {
-  data: {
-    id: { code: [32m&apos;validation_required&apos;[39m, message: [32m&apos;Cannot be blank.&apos;[39m },
-    tokenKey: { code: [32m&apos;validation_required&apos;[39m, message: [32m&apos;Cannot be blank.&apos;[39m }
-  },
-  message: [32m&apos;Failed to create record.&apos;[39m,
-  status: [33m400[39m
-}
+<testsuites name="vitest tests" tests="4" failures="2" errors="0" time="0.0123888">
+    <testsuite name="test/globalRoles.test.ts" timestamp="2026-01-22T13:19:42.236Z" hostname="DESKTOP-J05866Q" tests="4" failures="2" errors="0" skipped="0" time="0.0123888">
+        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should connect to PocketBase" time="0.0084713">
+            <failure message="Something went wrong." type="ClientResponseError 0">
+ClientResponseError 0: Something went wrong.
+ ❯ node_modules/pocketbase/dist/pocketbase.es.mjs:1:37027
+ ❯ test/globalRoles.test.ts:13:24
 
-            </system-err>
-            <failure message="Cannot register test user. Is registration open?" type="Error">
-Error: Cannot register test user. Is registration open?
- ❯ test/globalRoles.test.ts:32:23
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { url: &apos;&apos;, status: +0, response: {}, isAbort: false, originalError: { stack: &apos;TypeError: fetch failed\n    at node:internal/deps/undici/undici:13510:13\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at D:/Code/AdventurersLedger/Check/AdventurersLedger_Codex/frontend/test/globalRoles.test.ts:13:24\n    at file:///D:/Code/AdventurersLedger/Check/AdventurersLedger_Codex/frontend/node_modules/@vitest/runner/dist/index.js:915:20&apos;, message: &apos;fetch failed&apos;, cause: { stack: &apos;Error: connect ECONNREFUSED 127.0.0.1:8090\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)&apos;, message: &apos;connect ECONNREFUSED 127.0.0.1:8090&apos;, errno: -4078, code: &apos;ECONNREFUSED&apos;, syscall: &apos;connect&apos;, address: &apos;127.0.0.1&apos;, port: 8090, constructor: &apos;Function&lt;Error&gt;&apos;, name: &apos;Error&apos;, toString: &apos;Function&lt;toString&gt;&apos; }, constructor: &apos;Function&lt;TypeError&gt;&apos;, name: &apos;TypeError&apos;, toString: &apos;Function&lt;toString&gt;&apos; } }
+Caused by: TypeError: fetch failed
+ ❯ test/globalRoles.test.ts:13:24
+
+Caused by: Error: connect ECONNREFUSED 127.0.0.1:8090
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -4078, code: &apos;ECONNREFUSED&apos;, syscall: &apos;connect&apos;, address: &apos;127.0.0.1&apos;, port: 8090 }
             </failure>
         </testcase>
-        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should allow login as USER" time="0.0001056">
+        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should allow user registration (default role USER)" time="0.0026242">
+            <system-err>
+Registration failed: {}
+
+            </system-err>
+            <failure message="Something went wrong." type="ClientResponseError 0">
+ClientResponseError 0: Something went wrong.
+ ❯ node_modules/pocketbase/dist/pocketbase.es.mjs:1:37027
+ ❯ test/globalRoles.test.ts:19:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { url: &apos;&apos;, status: +0, response: {}, isAbort: false, originalError: { stack: &apos;TypeError: fetch failed\n    at node:internal/deps/undici/undici:13510:13\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at D:/Code/AdventurersLedger/Check/AdventurersLedger_Codex/frontend/test/globalRoles.test.ts:19:26\n    at file:///D:/Code/AdventurersLedger/Check/AdventurersLedger_Codex/frontend/node_modules/@vitest/runner/dist/index.js:915:20&apos;, message: &apos;fetch failed&apos;, cause: { stack: &apos;Error: connect ECONNREFUSED 127.0.0.1:8090\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)&apos;, message: &apos;connect ECONNREFUSED 127.0.0.1:8090&apos;, errno: -4078, code: &apos;ECONNREFUSED&apos;, syscall: &apos;connect&apos;, address: &apos;127.0.0.1&apos;, port: 8090, constructor: &apos;Function&lt;Error&gt;&apos;, name: &apos;Error&apos;, toString: &apos;Function&lt;toString&gt;&apos; }, constructor: &apos;Function&lt;TypeError&gt;&apos;, name: &apos;TypeError&apos;, toString: &apos;Function&lt;toString&gt;&apos; } }
+Caused by: TypeError: fetch failed
+ ❯ test/globalRoles.test.ts:19:26
+
+Caused by: Error: connect ECONNREFUSED 127.0.0.1:8090
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -4078, code: &apos;ECONNREFUSED&apos;, syscall: &apos;connect&apos;, address: &apos;127.0.0.1&apos;, port: 8090 }
+            </failure>
         </testcase>
-        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should FORBID USER from creating campaigns" time="0.0000766">
+        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should allow login as USER" time="0.0002158">
+        </testcase>
+        <testcase classname="test/globalRoles.test.ts" name="Global Roles Schema Integration &gt; should FORBID USER from creating campaigns" time="0.0000752">
         </testcase>
     </testsuite>
 </testsuites>

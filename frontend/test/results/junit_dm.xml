@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="5" failures="0" errors="0" time="0.2229367">
+    <testsuite name="test/dmWorkflow.test.ts" timestamp="2026-01-22T13:48:13.437Z" hostname="DESKTOP-J05866Q" tests="5" failures="0" errors="0" skipped="0" time="0.2229367">
+        <testcase classname="test/dmWorkflow.test.ts" name="DM Workflow Integration &gt; Async check: Server Health" time="0.0101211">
+        </testcase>
+        <testcase classname="test/dmWorkflow.test.ts" name="DM Workflow Integration &gt; Step 1: Authenticate as Main DM (Ashley)" time="0.0536425">
+            <system-out>
+Ashley Role: GM
+
+            </system-out>
+        </testcase>
+        <testcase classname="test/dmWorkflow.test.ts" name="DM Workflow Integration &gt; Step 2: Create a Campaign (GM Only)" time="0.0036233">
+        </testcase>
+        <testcase classname="test/dmWorkflow.test.ts" name="DM Workflow Integration &gt; Step 3: Create a Player Account" time="0.0963405">
+        </testcase>
+        <testcase classname="test/dmWorkflow.test.ts" name="DM Workflow Integration &gt; Step 4: Player CANNOT Create Campaign" time="0.0579116">
+            <system-out>
+Player Role: USER
+
+            </system-out>
+        </testcase>
+    </testsuite>
+</testsuites>
