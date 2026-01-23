@@ -1,0 +1,28 @@
+# TaleKeeper GCP Infrastructure Configuration
+# Copy this file to terraform.tfvars and fill in your values
+
+# Required: Your GCP Project ID
+project_id = "talekeeper-prod"
+
+# Region for deployment (must be US for Cloud Storage free tier)
+# Options: us-west1, us-central1, us-east1
+region = "us-central1"
+
+# Custom domains (optional - set enable_custom_domain = true to use)
+api_domain      = "api.talekeeper.org"
+frontend_domain = "talekeeper.org"
+
+# Enable custom domain mapping (requires DNS configuration)
+enable_custom_domain = false
+
+# Cloud Build CI/CD (optional)
+enable_cloud_build = false
+github_owner       = "kostchei"
+github_repo        = "AdventurersLedger_Codex"
+
+# PocketBase Configuration
+pocketbase_version = "0.26.6"
+
+# Cloud Run scaling (keep low for free tier)
+max_instances    = 2
+container_memory = "512Mi"

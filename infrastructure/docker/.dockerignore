@@ -1,0 +1,39 @@
+# Docker ignore file for PocketBase build
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Local data (don't include in image)
+pb_data/
+*.db
+*.db-shm
+*.db-wal
+
+# Documentation
+*.md
+!README.md
+
+# Terraform state
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Secrets
+*.env
+*.env.*
+!*.env.example
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db

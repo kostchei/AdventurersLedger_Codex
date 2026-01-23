@@ -1,0 +1,95 @@
+# TaleKeeper PocketBase Docker Image with Litestream
+# Optimized for GCP Cloud Run with persistent storage
+
+# =============================================================================
+# Stage 1: Download binaries
+# =============================================================================
+FROM alpine:3.19 AS downloader
+
+ARG POCKETBASE_VERSION=0.26.6
+ARG LITESTREAM_VERSION=0.3.13
+ARG TARGETARCH
+
+# Install download tools
+RUN apk add --no-cache curl unzip
+
+# Download PocketBase
+RUN case "${TARGETARCH}" in \
+        amd64) PB_ARCH="linux_amd64" ;; \
+        arm64) PB_ARCH="linux_arm64" ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
+    esac && \
+    curl -L "https://github.com/pocketbase/pocketbase/releases/download/v${POCKETBASE_VERSION}/pocketbase_${POCKETBASE_VERSION}_${PB_ARCH}.zip" \
+        -o /tmp/pocketbase.zip && \
+    unzip /tmp/pocketbase.zip -d /tmp/pocketbase && \
+    chmod +x /tmp/pocketbase/pocketbase
+
+# Download Litestream
+RUN case "${TARGETARCH}" in \
+        amd64) LS_ARCH="linux-amd64" ;; \
+        arm64) LS_ARCH="linux-arm64" ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
+    esac && \
+    curl -L "https://github.com/benbjohnson/litestream/releases/download/v${LITESTREAM_VERSION}/litestream-v${LITESTREAM_VERSION}-${LS_ARCH}.tar.gz" \
+        -o /tmp/litestream.tar.gz && \
+    tar -xzf /tmp/litestream.tar.gz -C /tmp && \
+    chmod +x /tmp/litestream
+
+# =============================================================================
+# Stage 2: Final image
+# =============================================================================
+FROM alpine:3.19
+
+# Labels
+LABEL org.opencontainers.image.title="TaleKeeper PocketBase"
+LABEL org.opencontainers.image.description="PocketBase with Litestream for GCP Cloud Run"
+LABEL org.opencontainers.image.source="https://github.com/kostchei/AdventurersLedger_Codex"
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    ca-certificates \
+    bash \
+    curl \
+    tini
+
+# Create non-root user
+RUN addgroup -S pocketbase && adduser -S pocketbase -G pocketbase
+
+# Create directories
+RUN mkdir -p /pb/pb_data /pb/pb_public /pb/pb_migrations && \
+    chown -R pocketbase:pocketbase /pb
+
+# Copy binaries from downloader stage
+COPY --from=downloader /tmp/pocketbase/pocketbase /usr/local/bin/pocketbase
+COPY --from=downloader /tmp/litestream /usr/local/bin/litestream
+
+# Copy Litestream configuration
+COPY litestream.yml /etc/litestream.yml
+
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Copy PocketBase migrations (if any)
+COPY --chown=pocketbase:pocketbase pb_migrations/ /pb/pb_migrations/
+
+# Environment variables
+ENV PB_DATA_DIR=/pb/pb_data
+ENV PB_PUBLIC_DIR=/pb/pb_public
+ENV PB_MIGRATIONS_DIR=/pb/pb_migrations
+
+# Expose PocketBase port
+EXPOSE 8090
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8090/api/health || exit 1
+
+# Use tini as init system
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Run as non-root user
+USER pocketbase
+
+# Start with entrypoint
+CMD ["/entrypoint.sh"]

@@ -1,0 +1,34 @@
+# Litestream Configuration for PocketBase on GCP Cloud Run
+# Provides continuous SQLite replication to Google Cloud Storage
+
+dbs:
+  # Main PocketBase database
+  - path: /pb/pb_data/data.db
+    replicas:
+      # Google Cloud Storage replica
+      - type: gcs
+        bucket: ${GCS_BUCKET}
+        path: litestream/data.db
+        # Sync settings optimized for Cloud Run
+        sync-interval: 1s
+        snapshot-interval: 1h
+        # Retention settings
+        retention: 720h  # 30 days
+        retention-check-interval: 1h
+        # Validation
+        validation-interval: 5m
+
+  # PocketBase logs database (optional, but useful for debugging)
+  - path: /pb/pb_data/logs.db
+    replicas:
+      - type: gcs
+        bucket: ${GCS_BUCKET}
+        path: litestream/logs.db
+        sync-interval: 10s
+        snapshot-interval: 24h
+        retention: 168h  # 7 days
+        retention-check-interval: 6h
+
+# Global settings
+# Note: GCS authentication uses Application Default Credentials (ADC)
+# On Cloud Run, this is automatically provided via the service account

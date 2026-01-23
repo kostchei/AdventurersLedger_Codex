@@ -1,0 +1,48 @@
+# Infrastructure gitignore
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform.lock.hcl
+
+# Environment files with secrets
+.env
+.env.local
+*.env
+
+# GCP credentials
+*.json
+!package.json
+!firebase.json
+key.json
+credentials.json
+service-account.json
+
+# Export files
+exports/
+
+# Build artifacts
+dist/
+node_modules/
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# Docker
+pb_data/
+*.db
+*.db-shm
+*.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
