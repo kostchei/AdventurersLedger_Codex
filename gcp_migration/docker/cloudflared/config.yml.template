@@ -1,0 +1,7 @@
+tunnel: <TUNNEL_ID>
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: api.talekeeper.org
+    service: http://pocketbase:8090
+  - service: http_status:404
