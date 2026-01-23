@@ -1,114 +1,111 @@
-# Tale-Keeper GCP Migration Guide
+# Tale-Keeper GCP Migration Guide (Bare Metal)
 
-This guide describes how to migrate your local PocketBase infrastructure to Google Cloud Platform (GCP) for free (using the Free Tier).
+This guide describes how to migrate your local PocketBase infrastructure to a Google Cloud Platform (GCP) **e2-micro** instance (Free Tier) using a simple, script-based approach.
 
 ## Overview
 
 The migration involves:
-1.  Provisioning a free **e2-micro** instance on GCP.
-2.  Setting up **Docker** and **Docker Compose** on the instance.
-3.  Transferring your local PocketBase data (`pb_data`, `pb_migrations`) and Cloudflare credentials.
-4.  Running PocketBase and Cloudflare Tunnel in Docker containers.
+1.  Creating a VM on GCP.
+2.  Uploading your local PocketBase data.
+3.  Running a setup script to install PocketBase and Cloudflare.
+4.  Connecting the Cloudflare Tunnel.
 
 ## Prerequisites
 
--   **Google Cloud Platform Account**: You need a billing account enabled (for verification), but we will use Free Tier resources.
--   **gcloud CLI**: Installed and authenticated (`gcloud auth login`).
--   **Terraform**: Installed (optional, but recommended for infrastructure setup).
--   **SCP**: For transferring files (usually available via `gcloud compute scp` or standard `scp`).
+-   **Google Cloud Platform Account**: Free Tier eligible.
+-   **Local Data**: Your `pocketbase/pb_data` directory.
+-   **Cloudflare Tunnel Token**: From your Cloudflare Zero Trust dashboard.
 
-## Step 1: Set up GCP Infrastructure
+## Step 1: Create GCP Instance
 
-We will use Terraform to create the VM.
+You can do this via the GCP Console or CLI.
 
-1.  Navigate to the `gcp_migration/terraform` directory:
+### Option A: GCP Console (Click-Ops)
+1.  Go to **Compute Engine > VM Instances**.
+2.  Click **Create Instance**.
+3.  **Name**: `pocketbase-server`
+4.  **Region**: `us-central1`, `us-west1`, or `us-east1` (verify Free Tier regions).
+5.  **Machine type**: `e2-micro` (2 vCPU, 1 GB memory).
+6.  **Boot disk**: Change to **Standard persistent disk** with **30 GB** size (Free Tier limit).
+    *   **Image**: Ubuntu 22.04 LTS (Jammy) or Debian 11/12.
+7.  **Firewall**: Check "Allow HTTP traffic" and "Allow HTTPS traffic".
+8.  Click **Create**.
+
+### Option B: gcloud CLI
+```bash
+gcloud compute instances create pocketbase-server \
+    --machine-type=e2-micro \
+    --zone=us-central1-a \
+    --image-family=ubuntu-2204-lts \
+    --image-project=ubuntu-os-cloud \
+    --boot-disk-size=30GB \
+    --boot-disk-type=pd-standard \
+    --tags=http-server,https-server
+```
+
+## Step 2: Prepare & Transfer Files
+
+1.  Navigate to the `gcp_migration` folder in your terminal.
+2.  **Copy local data** to this folder (temporary):
     ```bash
-    cd gcp_migration/terraform
+    cp -r ../pocketbase/pb_data .
+    cp -r ../pocketbase/pb_migrations .
+    # If you use pb_public
+    cp -r ../pocketbase/pb_public .
     ```
-
-2.  Initialize Terraform:
+3.  **Transfer files to the VM**:
+    Use `scp` or `gcloud compute scp`. Replace `YOUR_USER` and `YOUR_VM_IP` with your actual values.
     ```bash
-    terraform init
+    # Using standard SCP (if you have SSH keys set up)
+    scp -r setup.sh pocketbase.service pb_data pb_migrations pb_public YOUR_USER@YOUR_VM_IP:~
+
+    # OR using gcloud (easier)
+    gcloud compute scp --recurse setup.sh pocketbase.service pb_data pb_migrations pb_public pocketbase-server:~
     ```
 
-3.  Create a `terraform.tfvars` file (or pass variables via command line) with your Project ID:
-    ```hcl
-    project_id = "your-gcp-project-id"
-    ```
+## Step 3: Run Setup Script
 
-4.  Review and Apply the configuration:
+1.  SSH into your VM:
     ```bash
-    terraform apply
+    gcloud compute ssh pocketbase-server
     ```
-    Type `yes` when prompted.
-
-5.  Note the **External IP** address outputted at the end.
-
-### Alternative (Manual Setup)
-If you prefer not to use Terraform:
-1.  Create a VM instance in GCP Console:
-    -   **Region**: `us-central1` (or `us-west1`, `us-east1` for Free Tier).
-    -   **Machine type**: `e2-micro`.
-    -   **Boot disk**: Standard persistent disk, 30GB.
-    -   **Firewall**: Allow HTTP, HTTPS.
-2.  Use the Startup Script provided in `main.tf` to install Docker.
-
-## Step 2: Prepare Local Files
-
-1.  Navigate to the `gcp_migration/docker` directory.
-2.  **Copy your local data**:
-    Copy your existing `pb_data` and `pb_migrations` folders from your project root to this directory.
+2.  Run the setup script:
     ```bash
-    cp -r ../../pocketbase/pb_data .
-    cp -r ../../pocketbase/pb_migrations .
-    # If you have public files
-    cp -r ../../pocketbase/pb_public .
+    sudo bash setup.sh
     ```
+    *This will install PocketBase, create the system user, and move your data to `/opt/pocketbase`.*
 
-3.  **Configure Cloudflare Tunnel**:
-    -   Copy your `credentials.json` (tunnel credentials) to `gcp_migration/docker/cloudflared/`.
-    -   Rename `config.yml.template` to `config.yml` in `gcp_migration/docker/cloudflared/`.
-    -   Edit `config.yml`:
-        -   Replace `<TUNNEL_ID>` with your actual Tunnel ID (e.g., `081ada0c-35a5-4658-a833-7f39a91c7bf2`).
-        -   Ensure `ingress` points to `http://pocketbase:8090`.
-
-## Step 3: Deploy to VM
-
-1.  **Transfer files to the VM**:
-    You can use `gcloud compute scp` to copy the `docker` directory to the VM.
+3.  Start PocketBase:
     ```bash
-    # Replace INSTANCE_NAME and ZONE with your values (e.g., pocketbase-vm, us-central1-a)
-    gcloud compute scp --recurse gcp_migration/docker user@pocketbase-vm:~/deployment --zone=us-central1-a
+    sudo systemctl start pocketbase
     ```
-
-2.  **SSH into the VM**:
+4.  Check status:
     ```bash
-    gcloud compute ssh user@pocketbase-vm --zone=us-central1-a
+    sudo systemctl status pocketbase
     ```
+    *It should be Active (running).*
 
-3.  **Start Services**:
-    On the VM:
+## Step 4: Configure Cloudflare Tunnel
+
+To make your backend accessible globally without opening ports on the VM:
+
+1.  **Get your Tunnel Token**:
+    *   Go to Cloudflare Zero Trust Dashboard > Access > Tunnels.
+    *   Select your tunnel (or create a new one).
+    *   Click "Configure" > "Install connector".
+    *   Copy the token part from the command (the long string after `--token`).
+
+2.  **Install the Service**:
+    On the VM, run:
     ```bash
-    cd ~/deployment/docker
-    sudo docker compose up -d --build
+    sudo cloudflared service install <PASTE_YOUR_TOKEN_HERE>
     ```
 
-## Step 4: Verify Deployment
+3.  **Verify**:
+    The tunnel should show as "Healthy" in the Cloudflare Dashboard. Your `api.talekeeper.org` domain will now route to `localhost:8090` on the VM.
 
-1.  Check if containers are running:
-    ```bash
-    sudo docker compose ps
-    ```
-2.  Check Cloudflare Tunnel logs:
-    ```bash
-    sudo docker compose logs cloudflared
-    ```
-    It should say "Registered tunnel connection".
-3.  Access your API:
-    Visit `https://api.talekeeper.org/api/health` or your Admin UI.
+## Maintenance
 
-## Troubleshooting
-
--   **PocketBase Version**: The Dockerfile uses version `0.22.21`. If your local data is from a newer version (e.g., `0.36.x`), update the `ARG PB_VERSION` in `Dockerfile`.
--   **Permissions**: Ensure the `pb_data` directory has correct permissions for the Docker user. You might need to run `chmod -R 777 pb_data` inside the container or on the host if issues arise (not recommended for prod, but fine for single-user).
--   **Cloudflare**: If tunnel fails, check `config.yml` matches your Tunnel ID and credentials file is present.
+-   **Logs**: `journalctl -u pocketbase -f`
+-   **Restart**: `sudo systemctl restart pocketbase`
+-   **Update**: Replace the binary in `/opt/pocketbase/pocketbase` and restart the service.
