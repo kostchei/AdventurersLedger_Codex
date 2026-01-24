@@ -15,8 +15,8 @@
              │ Encrypted Tunnel
              ↓
 ┌─────────────────────────┐
-│  PocketBase (Local)     │ ← localhost:8090
-│  Desktop/Laptop Server  │
+│  PocketBase (GCP)       │ ← Always Free e2-micro VM
+│  Compute Engine VM      │
 └─────────────────────────┘
 ```
 
@@ -24,10 +24,16 @@
 
 - GitHub account
 - Azure account (free tier works)
+- GCP account (free tier works)
 - Cloudflare account with `talekeeper.org` domain
-- Local machine running PocketBase + Cloudflare Tunnel
 
-## Part 1: Local Backend Setup (Already Complete ✅)
+## Part 1: PocketBase Backend (Cloud-Based ✅)
+
+The backend is now designed to run fully in the cloud on GCP’s Always Free tier. Follow the migration guide to move the existing local PocketBase data and tunnel to GCP:
+
+- **GCP migration guide:** [GCP_MIGRATION.md](GCP_MIGRATION.md)
+
+## Part 2: Local Backend Setup (Legacy / Optional)
 
 ### PocketBase
 - Running on `localhost:8090`
@@ -44,7 +50,7 @@
 start-talekeeper.bat
 ```
 
-## Part 2: Azure Static Web Apps Deployment
+## Part 3: Azure Static Web Apps Deployment
 
 ### Step 1: Create Azure Static Web App
 
@@ -123,11 +129,11 @@ Watch the deployment:
 - GitHub: Actions tab
 - Azure: Deployment center in your Static Web App
 
-## Part 3: Verify Deployment
+## Part 4: Verify Deployment
 
 1. **Frontend:** https://talekeeper.org
 2. **API:** https://api.talekeeper.org/api/health
-3. **Admin UI:** http://127.0.0.1:8090/_/ (local only)
+3. **Admin UI:** https://api.talekeeper.org/_/
 
 ### Test OAuth Login
 
@@ -143,7 +149,8 @@ Watch the deployment:
 - Ensure `package.json` is in `frontend/` folder
 
 ### Issue: API connection fails
-- Verify Cloudflare Tunnel is running: `start-talekeeper.bat`
+- Verify Cloudflare Tunnel is running on the GCP VM: `sudo systemctl status cloudflared`
+- Verify PocketBase is running on the GCP VM: `sudo systemctl status pocketbase`
 - Test API directly: `curl https://api.talekeeper.org/api/health`
 - Check `VITE_PB_URL` in workflow file
 
@@ -182,7 +189,7 @@ Deployment happens automatically via GitHub Actions.
 
 - **Azure Static Web Apps:** Free tier (100 GB bandwidth/month)
 - **Cloudflare Tunnel:** Free
-- **PocketBase:** Free (runs locally)
+- **PocketBase (GCP Always Free e2-micro):** Free
 - **Domain (talekeeper.org):** ~$10-15/year
 
 **Total monthly cost:** $0 (excluding domain renewal)
