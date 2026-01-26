@@ -91,7 +91,7 @@
                 "name": "password",
                 "type": "password",
                 "system": true,
-                "required": true
+                "required": false
             },
             {
                 "id": "text2504183744",
