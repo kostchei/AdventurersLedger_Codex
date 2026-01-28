@@ -1,16 +1,25 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/*.js", "/*.css", "/*.png", "/*.jpg", "/*.svg"]
+    "exclude": [
+      "/assets/*",
+      "/*.js",
+      "/*.css",
+      "/*.png",
+      "/*.jpg",
+      "/*.svg"
+    ]
   },
   "routes": [
     {
       "route": "/*",
-      "allowedRoles": ["anonymous"]
+      "allowedRoles": [
+        "anonymous"
+      ]
     }
   ],
   "globalHeaders": {
-    "content-security-policy": "default-src 'self' https://api.talekeeper.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.talekeeper.org https://accounts.google.com; font-src 'self' data:;"
+    "content-security-policy": "default-src 'self' https://api.talekeeper.org; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://api.talekeeper.org https://accounts.google.com; font-src 'self' data:;"
   },
   "mimeTypes": {
     ".json": "application/json",

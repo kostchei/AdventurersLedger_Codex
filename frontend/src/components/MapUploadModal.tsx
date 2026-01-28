@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { campaignApi } from '../lib/campaigns';
 
 interface MapUploadModalProps {
     campaignId: string;
@@ -53,7 +54,6 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
             formData.append('image_width', dimensions.width.toString());
             formData.append('image_height', dimensions.height.toString());
 
-            const { campaignApi } = await import('../lib/campaigns');
             await campaignApi.uploadMapLayer(campaignId, formData);
 
             onUploadSuccess();
