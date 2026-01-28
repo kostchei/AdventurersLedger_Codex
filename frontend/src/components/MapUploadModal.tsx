@@ -58,9 +58,9 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
 
             onUploadSuccess();
             onClose();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Upload failed:', err);
-            setError(err.message || 'Failed to upload map layer.');
+            setError(err instanceof Error ? err.message : 'Failed to upload map layer.');
         } finally {
             setIsUploading(false);
         }

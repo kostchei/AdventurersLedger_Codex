@@ -8,7 +8,7 @@ export default function Login() {
   const { isAuthenticated, loginWithGoogle, isLoading } = useAuthStore();
   const [error, setError] = useState<string | null>(null);
 
-  const from = (location.state as any)?.from || '/dashboard';
+  const from = (location.state as { from?: string })?.from || '/dashboard';
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,9 +21,9 @@ export default function Login() {
     try {
       await loginWithGoogle();
       navigate(from, { replace: true });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login failed:', err);
-      setError(err.message || 'Login failed. Please ensure Google OAuth is configured in PocketBase.');
+      setError(err instanceof Error ? err.message : 'Login failed. Please ensure Google OAuth is configured in PocketBase.');
     }
   };
 

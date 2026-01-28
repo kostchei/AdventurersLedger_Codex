@@ -1,4 +1,3 @@
-import React from 'react';
 import { useWorldState } from '../hooks/useWorldState';
 
 export default function WorldState() {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { FormEvent } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { campaignApi } from '../lib/campaigns';
@@ -7,10 +6,9 @@ import { pb } from '../lib/pb';
 import HexMapViewer from '../components/HexMapViewer';
 import { useFogOfWar } from '../hooks/useFogOfWar';
 import { useAuthStore } from '../store/authStore';
-import CharacterStats from '../components/CharacterStats';
 import WorldState from '../components/WorldState';
 import type { HexCoord } from '../utils/hexGrid';
-import type { User, CampaignMember, CampaignNomination, MapLayer } from '../types';
+import type { CampaignMember, CampaignNomination, MapLayer } from '../types';
 import MapUploadModal from '../components/MapUploadModal';
 
 
@@ -24,27 +22,9 @@ export default function CampaignPage() {
   const { revealedHexes, revealHex } = useFogOfWar(currentZ);
   const [partyPosition, setPartyPosition] = useState<{ hexX: number; hexY: number; z: number } | null>(null);
   const [isMapUploadModalOpen, setIsMapUploadModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'character' | 'world'>('character');
   const queryClient = useQueryClient();
-  const [nomineeId, setNomineeId] = useState('');
-  const [keepAccess, setKeepAccess] = useState(true);
-  const [nominationMessage, setNominationMessage] = useState('');
 
-  const nominationMutation = useMutation({
-    mutationFn: (payload: { playerId: string; keepAccess: boolean; message?: string }) =>
-      campaignApi.createNomination({
-        campaignId: campaignId!,
-        playerId: payload.playerId,
-        keepAccess: payload.keepAccess,
-        message: payload.message,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['campaign', campaignId, 'nominations'] });
-      setNomineeId('');
-      setKeepAccess(true);
-      setNominationMessage('');
-    },
-  });
+  /* Removed nominationMutation since it was unused */
 
   const acceptMutation = useMutation({
     mutationFn: (nominationId: string) => campaignApi.acceptNomination(campaignId!, nominationId),
@@ -62,15 +42,7 @@ export default function CampaignPage() {
     },
   });
 
-  const handleNominationSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!campaignId || !nomineeId) return;
-    nominationMutation.mutate({
-      playerId: nomineeId,
-      keepAccess,
-      message: nominationMessage.trim() || undefined,
-    });
-  };
+  /* Removed handleNominationSubmit since it was unused */
 
   const { data: campaign, isLoading } = useQuery({
     queryKey: ['campaign', campaignId],
@@ -78,7 +50,7 @@ export default function CampaignPage() {
     enabled: !!campaignId,
   });
 
-  const { data: members } = useQuery<CampaignMember[]>({
+  useQuery<CampaignMember[]>({
     queryKey: ['campaign', campaignId, 'members'],
     queryFn: () => campaignApi.getCampaignMembers(campaignId!),
     enabled: !!campaignId,
@@ -147,7 +119,7 @@ export default function CampaignPage() {
       });
 
       await revealHex(hex.q, hex.r, hex.z);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to move party:', err);
     }
   };
@@ -214,7 +186,7 @@ export default function CampaignPage() {
             Character Profile
           </button>
           <div className="flex bg-slate-800/50 rounded-lg p-1 border border-white/5">
-            {maps?.map((map: any) => (
+            {maps?.map((map: MapLayer) => (
               <button
                 key={map.id}
                 onClick={() => setCurrentZ(map.z)}

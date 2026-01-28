@@ -4,9 +4,11 @@ interface HPBarProps {
     hp: number;
     maxHp: number;
     showLabel?: boolean;
+    isDM?: boolean;
+    onHPChange?: (newHP: number) => void;
 }
 
-const HPBar: React.FC<HPBarProps> = ({ hp, maxHp, showLabel = true }) => {
+const HPBar: React.FC<HPBarProps> = ({ hp, maxHp, showLabel = true, isDM: _isDM = false, onHPChange: _onHPChange }) => {
     const hpPercent = Math.max(0, Math.min(100, (hp / maxHp) * 100));
 
     // Determine color based on health percentage

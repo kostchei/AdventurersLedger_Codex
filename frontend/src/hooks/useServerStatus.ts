@@ -23,7 +23,7 @@ export function useServerStatus() {
         checkStatus();
 
         // Initial check
-        let timeoutId: NodeJS.Timeout;
+        let timeoutId: ReturnType<typeof setTimeout>;
 
         if (isOnline === false) {
             setIsRetrying(true);

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { HexGrid } from '../utils/hexGrid';
 import type { HexCoord } from '../utils/hexGrid';
 import type { Map } from '../types';
@@ -21,15 +21,13 @@ export default function HexMapViewer({
   onHexClick,
 }: HexMapViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [hexGrid, setHexGrid] = useState<HexGrid | null>(null);
   const [hoveredHex, setHoveredHex] = useState<HexCoord | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  // Initialize hex grid
-  useEffect(() => {
+  const hexGrid = useMemo(() => {
     const hexSize = Math.min(map.imageWidth / map.hexColumns, map.imageHeight / map.hexRows) / 2;
-    const grid = new HexGrid(
+    return new HexGrid(
       hexSize,
       map.hexColumns,
       map.hexRows,
@@ -37,17 +35,18 @@ export default function HexMapViewer({
       map.imageHeight,
       (map.hexOrientation as 'flat' | 'pointy') || 'flat'
     );
-    setHexGrid(grid);
+  }, [map.imageWidth, map.hexColumns, map.imageHeight, map.hexRows, map.hexOrientation]);
 
-    // Load image
+  // Load map image
+  useEffect(() => {
     const img = new Image();
     img.onload = () => {
       imageRef.current = img;
       setImageLoaded(true);
     };
     img.src = map.imageUrl;
-    setImageLoaded(false); // Reset while loading new layer
-  }, [map]);
+    setImageLoaded(false);
+  }, [map.imageUrl]);
 
   // Render canvas
   useEffect(() => {
@@ -107,7 +106,7 @@ export default function HexMapViewer({
     ctx.lineWidth = 1;
     for (let q = 0; q < map.hexColumns; q++) {
       for (let r = 0; r < map.hexRows; r++) {
-        const corners = hexGrid.getHexCorners({ q, r });
+        const corners = hexGrid.getHexCorners({ q, r, z: currentZ });
         ctx.beginPath();
         ctx.moveTo(corners[0].x, corners[0].y);
         for (let i = 1; i < corners.length; i++) {

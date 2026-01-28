@@ -85,8 +85,8 @@ export default function Dashboard() {
                 }
               }}
               className={`card hover:shadow-xl transition-shadow border-2 border-dashed border-gray-600 flex items-center justify-center min-h-[200px] ${user?.global_role === 'GM' || user?.global_role === 'ADMIN'
-                  ? 'hover:border-primary-500 cursor-pointer'
-                  : 'opacity-50 cursor-not-allowed hover:border-red-500'
+                ? 'hover:border-primary-500 cursor-pointer'
+                : 'opacity-50 cursor-not-allowed hover:border-red-500'
                 }`}
               title={
                 user?.global_role === 'GM' || user?.global_role === 'ADMIN'

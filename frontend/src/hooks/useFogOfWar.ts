@@ -30,8 +30,9 @@ export function useFogOfWar(currentZ: number = 0) {
                 });
 
                 const newSet = new Set<string>();
-                records.forEach((record: any) => {
-                    newSet.add(getHexKey(record.q, record.r, record.z));
+                records.forEach((record) => {
+                    const r = record as unknown as FoWHex;
+                    newSet.add(getHexKey(r.q, r.r, r.z));
                 });
                 setRevealedHexes(newSet);
             } catch (error) {

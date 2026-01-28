@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCharacterStats } from '../hooks/useCharacterStats';
 
 interface FactionRenownProps {

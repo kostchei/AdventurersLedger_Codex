@@ -17,9 +17,9 @@ export default function JoinCampaign() {
                 setTimeout(() => {
                     navigate(`/campaign/${campaignId}`);
                 }, 1500);
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error('Failed to join campaign:', err);
-                setError(err.message || 'The realm portal failed to stabilize. Ensure the invite is still valid.');
+                setError(err instanceof Error ? err.message : 'The realm portal failed to stabilize. Ensure the invite is still valid.');
                 setIsJoining(false);
             }
         };

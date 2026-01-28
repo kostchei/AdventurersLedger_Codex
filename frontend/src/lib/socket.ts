@@ -64,25 +64,25 @@ class SocketService {
   }
 
   // Listen for hex reveals
-  onHexesRevealed(callback: (data: any) => void) {
+  onHexesRevealed(callback: (data: unknown) => void) {
     if (!this.socket) throw new Error('Socket not connected');
     this.socket.on('hexes:revealed', callback);
   }
 
   // Listen for session state
-  onSessionState(callback: (data: any) => void) {
+  onSessionState(callback: (data: unknown) => void) {
     if (!this.socket) throw new Error('Socket not connected');
     this.socket.on('session:state', callback);
   }
 
   // Listen for player joined
-  onPlayerJoined(callback: (data: any) => void) {
+  onPlayerJoined(callback: (data: unknown) => void) {
     if (!this.socket) throw new Error('Socket not connected');
     this.socket.on('player:joined', callback);
   }
 
   // Listen for player left
-  onPlayerLeft(callback: (data: any) => void) {
+  onPlayerLeft(callback: (data: unknown) => void) {
     if (!this.socket) throw new Error('Socket not connected');
     this.socket.on('player:left', callback);
   }

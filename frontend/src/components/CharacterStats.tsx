@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, type ChangeEvent, type KeyboardEvent } from 'react';
 import { useCharacterStats } from '../hooks/useCharacterStats';
 import HPBar from './character/HPBar';
 import AbilityScoreGrid from './character/AbilityScoreGrid';
@@ -86,9 +86,9 @@ export default function CharacterStats({ isDM = false }: CharacterStatsProps) {
                             autoFocus
                             type="number"
                             value={editValue}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditValue(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setEditValue(e.target.value)}
                             onBlur={handleStatSubmit}
-                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleStatSubmit()}
+                            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleStatSubmit()}
                             className="w-full bg-slate-900 border border-amber-500 rounded px-1 text-sm text-center text-amber-400 font-mono focus:outline-none"
                         />
                     ) : (
@@ -110,9 +110,9 @@ export default function CharacterStats({ isDM = false }: CharacterStatsProps) {
                             autoFocus
                             type="number"
                             value={editValue}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditValue(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setEditValue(e.target.value)}
                             onBlur={handleStatSubmit}
-                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleStatSubmit()}
+                            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleStatSubmit()}
                             className="w-full bg-slate-900 border border-primary-500 rounded px-1 text-sm text-center text-primary-400 font-mono focus:outline-none"
                         />
                     ) : (
@@ -129,7 +129,7 @@ export default function CharacterStats({ isDM = false }: CharacterStatsProps) {
                 <section>
                     <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 leading-none">Active Afflictions</h3>
                     <div className="flex flex-wrap gap-1.5">
-                        {stats.conditions.map(condition => (
+                        {stats.conditions.map((condition: string) => (
                             <span
                                 key={condition}
                                 className="px-2 py-1 bg-red-900/20 text-red-400 border border-red-900/40 rounded-md text-[9px] font-black uppercase tracking-wider"

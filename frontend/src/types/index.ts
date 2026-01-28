@@ -86,10 +86,10 @@ export interface Character {
   currentHp: number;
   armorClass: number;
   proficiencyBonus: number;
-  skills: any;
-  equipment: any;
-  spells: any;
-  features: any;
+  skills: Record<string, unknown>;
+  equipment: Record<string, unknown>;
+  spells: Record<string, unknown>;
+  features: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }

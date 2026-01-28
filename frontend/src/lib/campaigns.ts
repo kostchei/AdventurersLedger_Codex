@@ -1,6 +1,6 @@
 import { pb } from './pb';
 import type { RecordModel } from 'pocketbase';
-import type { Campaign, CampaignMember, CampaignNomination, MapLayer } from '../types';
+import type { Campaign, CampaignMember, CampaignNomination } from '../types';
 import type {
   CampaignMembershipRecord,
   CampaignNominationRecord,
