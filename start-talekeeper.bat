@@ -89,14 +89,15 @@ echo.
 if "%SERVICES_OK%"=="1" (
     echo   [32mAll services running![0m
     echo.
-    echo   API (local):  http://127.0.0.1:8090
+    REM echo   API (local):  http://127.0.0.1:8090
     echo   API (public): https://api.talekeeper.org
-    echo   Admin UI:     http://127.0.0.1:8090/_/
-    echo   Frontend:     http://localhost:5173
+    REM echo   Admin UI:     http://127.0.0.1:8090/_/
+    REM echo   Frontend:     http://localhost:5173
     echo.
     echo Press any key to open Admin UI...
     pause >nul
-    start http://127.0.0.1:8090/_/
+    REM start http://127.0.0.1:8090/_/
+    start https://api.talekeeper.org/_/
 ) else (
     echo   [31mSome services failed to start![0m
     echo   Check the error messages above.

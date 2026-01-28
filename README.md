@@ -111,9 +111,9 @@ SESSION_SECRET="your-super-secret-session-key"
 
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
-GOOGLE_CALLBACK_URL="http://localhost:3001/auth/google/callback"
+GOOGLE_CALLBACK_URL="https://api.talekeeper.org/api/oauth2-redirect"
 
-FRONTEND_URL="http://localhost:5173"
+FRONTEND_URL="https://talekeeper.org"
 ```
 
 Initialize database:
@@ -141,8 +141,8 @@ npm install
 Create `.env` file (copy from `.env.example`):
 
 ```env
-VITE_API_URL=http://localhost:3001
-VITE_WS_URL=http://localhost:3001
+VITE_API_URL=https://api.talekeeper.org
+VITE_WS_URL=https://api.talekeeper.org
 ```
 
 Start frontend:
@@ -161,7 +161,7 @@ Frontend runs on `http://localhost:5173`
 4. Navigate to **Credentials** → **Create Credentials** → **OAuth 2.0 Client ID**
 5. Configure:
    - Application type: **Web application**
-   - Authorized redirect URIs: `http://localhost:3001/auth/google/callback`
+   - Authorized redirect URIs: `https://api.talekeeper.org/api/oauth2-redirect`
 6. Copy **Client ID** and **Client Secret** to backend `.env`
 
 ## Usage

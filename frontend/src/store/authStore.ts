@@ -16,6 +16,7 @@ interface AuthState {
 // Helper to map PocketBase record to our User interface
 const mapPBUser = (record: PBUser | any): User | null => {
   if (!record) return null;
+
   return {
     id: record.id,
     email: record.email,

@@ -7,11 +7,11 @@ The app is ready for Google Login, but you must provide the keys from your own G
 
 1.  **Get Keys**: Go to the [Google Cloud Console](https://console.cloud.google.com/apis/credentials).
 2.  **Create Client ID**: Create an "OAuth 2.0 Client ID" for a Web Application.
-3.  **Set Redirect URLs**: Add **both** of these to the "Authorized redirect URIs" in Google Console:
-    - `http://localhost:8090/api/oauth2-redirect` (For local testing)
-    - `https://api.talekeeper.org/api/oauth2-redirect` (For your live domain)
+3.  **Set Redirect URLs**: Add this to the "Authorized redirect URIs" in Google Console:
+    - `https://api.talekeeper.org/api/oauth2-redirect` (Public domain)
+
 4.  **Update PocketBase**:
-    - Open your Admin Dashboard (`http://127.0.0.1:8090/_/`).
+    - Open your Admin Dashboard (`https://api.talekeeper.org/_/`).
     - Go to **Settings > Auth providers > Google**.
     - Insert your **Client ID** and **Client Secret**.
 
@@ -31,7 +31,7 @@ To let your players access the map while you're offline or away:
 You now have two powerful ways to manage the world:
 
 - **The Website**: Use the sidebar in the Campaign Page to track HP, XP, and Gold in real-time.
-- **The Dashboard**: Use the PocketBase Admin UI (`http://127.0.0.1:8090/_/`) for batch updates:
+- **The Dashboard**: Use the PocketBase Admin UI (`https://api.talekeeper.org/_/`) for batch updates:
     - **`world_state`**: Update monster kill counts or discovered NPCs.
     - **`fog_of_war`**: Manually reveal or hide hexes by adding/removing "q,r,z" coordinates.
     - **`users_stats`**: Directly edit player gold or conditions.
