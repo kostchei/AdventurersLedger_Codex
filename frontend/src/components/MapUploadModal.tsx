@@ -16,6 +16,13 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const parseZIndexInput = (value: string): number => {
+        const trimmed = value.trim();
+        if (trimmed === '') return 0;
+        const parsed = Number(trimmed);
+        return Number.isFinite(parsed) ? parsed : 0;
+    };
+
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,9 +54,11 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
 
         try {
             const formData = new FormData();
+            const resolvedZIndex = Number.isFinite(zIndex) ? zIndex : 0;
+
             formData.append('map_file', file);
             formData.append('campaign', campaignId);
-            formData.append('z_index', zIndex.toString());
+            formData.append('z_index', resolvedZIndex.toString());
             formData.append('hex_columns', cols.toString());
             formData.append('hex_rows', rows.toString());
             formData.append('image_width', dimensions.width.toString());
@@ -58,12 +67,12 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
             // Debug: log what we're sending
             console.log('Uploading map with data:', {
                 campaignId,
-                z_index: zIndex,
+                z_index: resolvedZIndex,
                 hex_columns: cols,
                 hex_rows: rows,
                 image_width: dimensions.width,
                 image_height: dimensions.height,
-                file: file.name
+                file: file.name,
             });
 
             await campaignApi.uploadMapLayer(campaignId, formData);
@@ -147,7 +156,7 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
                             <input
                                 type="number"
                                 value={zIndex}
-                                onChange={(e) => setZIndex(parseInt(e.target.value))}
+                                onChange={(e) => setZIndex(parseZIndexInput(e.target.value))}
                                 className="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"
                             />
                         </div>
