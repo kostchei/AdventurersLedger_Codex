@@ -31,7 +31,6 @@ const computeFlatCoverRows = (imageHeight: number, hexSize: number, columns: num
 export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }: MapUploadModalProps) {
     const [file, setFile] = useState<File | null>(null);
     const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
-    const [zIndex, setZIndex] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [scaleMilesInput, setScaleMilesInput] = useState('100');
@@ -40,13 +39,6 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const previewRef = useRef<HTMLDivElement>(null);
     const [previewSize, setPreviewSize] = useState<{ width: number; height: number } | null>(null);
-
-    const parseZIndexInput = (value: string): number => {
-        const trimmed = value.trim();
-        if (trimmed === '') return 0;
-        const parsed = Number(trimmed);
-        return Number.isFinite(parsed) ? parsed : 0;
-    };
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -208,11 +200,9 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
 
         try {
             const formData = new FormData();
-            const resolvedZIndex = Number.isFinite(zIndex) ? zIndex : 0;
 
             formData.append('map_file', file);
             formData.append('campaign', campaignId);
-            formData.append('z_index', resolvedZIndex.toString());
             formData.append('hex_columns', derivedLayout.columns.toString());
             formData.append('hex_rows', derivedLayout.rows.toString());
             formData.append('image_width', dimensions.width.toString());
@@ -224,7 +214,6 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
             // Debug: log what we're sending
             console.log('Uploading map with data:', {
                 campaignId,
-                z_index: resolvedZIndex,
                 hex_columns: derivedLayout.columns,
                 hex_rows: derivedLayout.rows,
                 image_width: dimensions.width,
@@ -307,18 +296,6 @@ export default function MapUploadModal({ campaignId, onClose, onUploadSuccess }:
                                     <p className="text-gray-500 text-xs">PNG, WebP, or JPEG (max 20MB)</p>
                                 </div>
                             )}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-400 mb-1">Index (Z)</label>
-                            <input
-                                type="number"
-                                value={zIndex}
-                                onChange={(e) => setZIndex(parseZIndexInput(e.target.value))}
-                                className="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"
-                            />
                         </div>
                     </div>
 

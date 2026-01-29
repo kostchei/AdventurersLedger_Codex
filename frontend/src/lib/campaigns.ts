@@ -351,7 +351,7 @@ export const campaignApi = {
   getMaps: async (campaignId: string): Promise<RecordModel[]> => {
     return pb.collection('world_state').getFullList({
       filter: `campaign = "${campaignId}"`,
-      sort: 'z_index',
+      sort: '-created',
     });
   },
 

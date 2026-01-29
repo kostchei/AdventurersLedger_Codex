@@ -67,7 +67,6 @@ export interface FogOfWar extends PBBaseRecord {
  */
 export interface WorldState extends PBBaseRecord {
   layer_id: string;
-  z_index: number;
   map_url: string;
   cleared_dungeons_list: string[];
 }

@@ -112,20 +112,14 @@ export const fogOfWarApi = {
 export const worldStateApi = {
   getAll: async (): Promise<WorldState[]> => {
     return pb.collection('world_state').getFullList<WorldState>({
-      sort: 'z_index',
+      sort: '-created',
     });
   },
 
-  getByLayerId: async (layerId: string): Promise<WorldState | null> => {
+  getLatestForCampaign: async (campaignId: string): Promise<WorldState | null> => {
     const records = await pb.collection('world_state').getList<WorldState>(1, 1, {
-      filter: `layer_id = "${layerId}"`,
-    });
-    return records.items[0] ?? null;
-  },
-
-  getByZIndex: async (zIndex: number): Promise<WorldState | null> => {
-    const records = await pb.collection('world_state').getList<WorldState>(1, 1, {
-      filter: `z_index = ${zIndex}`,
+      filter: `campaign = "${campaignId}"`,
+      sort: '-created',
     });
     return records.items[0] ?? null;
   },
@@ -146,6 +140,17 @@ export const worldStateApi = {
     callback: (data: RecordSubscription<WorldState>) => void
   ): Promise<UnsubscribeFunc> => {
     return pb.collection('world_state').subscribe<WorldState>('*', callback);
+  },
+
+  subscribeToCampaign: (
+    campaignId: string,
+    callback: (data: RecordSubscription<WorldState>) => void
+  ): Promise<UnsubscribeFunc> => {
+    return pb.collection('world_state').subscribe<WorldState>('*', (event) => {
+      if (event.record.campaign === campaignId) {
+        callback(event);
+      }
+    });
   },
 };
 

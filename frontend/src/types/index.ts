@@ -156,7 +156,6 @@ export interface MapLayer {
   hexRows: number;
   hexOrientation: string;
   hexData?: Record<string, { terrain: string; elevation?: number }>;
-  z: number;
   createdAt: string;
   updatedAt: string;
 }

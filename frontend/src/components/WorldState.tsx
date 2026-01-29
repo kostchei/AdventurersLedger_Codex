@@ -1,7 +1,11 @@
 import { useWorldState } from '../hooks/useWorldState';
 
-export default function WorldState() {
-    const { state, loading, error } = useWorldState(0); // Default to layer 0 for now
+interface WorldStateProps {
+    campaignId?: string;
+}
+
+export default function WorldState({ campaignId }: WorldStateProps) {
+    const { state, loading, error } = useWorldState(campaignId);
 
     if (loading) {
         return (
@@ -20,6 +24,14 @@ export default function WorldState() {
         return (
             <div className="p-4 bg-red-900/10 border border-red-900/30 rounded-lg text-red-500 text-xs text-center font-medium">
                 The world archives are currently inaccessible.
+            </div>
+        );
+    }
+
+    if (!campaignId) {
+        return (
+            <div className="text-slate-500 text-sm italic text-center py-8 bg-slate-900/20 rounded-lg border border-dashed border-slate-800">
+                No campaign selected.
             </div>
         );
     }

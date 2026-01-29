@@ -2,15 +2,21 @@ import { useEffect, useState, useCallback } from 'react';
 import { worldStateApi } from '../lib/pbClient';
 import type { WorldState } from '../types/pocketbase';
 
-export function useWorldState(zIndex: number = 0) {
+export function useWorldState(campaignId?: string) {
     const [state, setState] = useState<WorldState | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(Boolean(campaignId));
     const [error, setError] = useState<Error | null>(null);
 
     const fetchState = useCallback(async () => {
+        if (!campaignId) {
+            setState(null);
+            setLoading(false);
+            return;
+        }
+
         try {
             setLoading(true);
-            const data = await worldStateApi.getByZIndex(zIndex);
+            const data = await worldStateApi.getLatestForCampaign(campaignId);
             setState(data);
             setError(null);
         } catch (err) {
@@ -19,18 +25,22 @@ export function useWorldState(zIndex: number = 0) {
         } finally {
             setLoading(false);
         }
-    }, [zIndex]);
+    }, [campaignId]);
 
     useEffect(() => {
+        if (!campaignId) {
+            setLoading(false);
+            setState(null);
+            return;
+        }
+
         fetchState();
 
         let unsubscribe: (() => void) | undefined;
 
         const setupSubscription = async () => {
-            unsubscribe = await worldStateApi.subscribe((e) => {
-                if (e.record.z_index === zIndex) {
-                    setState(e.record);
-                }
+            unsubscribe = await worldStateApi.subscribeToCampaign(campaignId, (e) => {
+                setState(e.record);
             });
         };
 
@@ -39,7 +49,7 @@ export function useWorldState(zIndex: number = 0) {
         return () => {
             if (unsubscribe) unsubscribe();
         };
-    }, [zIndex, fetchState]);
+    }, [campaignId, fetchState]);
 
     return { state, loading, error, refresh: fetchState };
 }

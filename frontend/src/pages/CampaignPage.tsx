@@ -18,7 +18,7 @@ export default function CampaignPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
-  const [currentZ, setCurrentZ] = useState(0);
+  const currentZ = 0;
   const { revealedHexes, revealHex } = useFogOfWar(currentZ);
   const [partyPosition, setPartyPosition] = useState<{ hexX: number; hexY: number; z: number } | null>(null);
   const [isMapUploadModalOpen, setIsMapUploadModalOpen] = useState(false);
@@ -68,7 +68,7 @@ export default function CampaignPage() {
     queryFn: async () => {
       const records = await pb.collection('world_state').getFullList({
         filter: `campaign = "${campaignId}"`,
-        sort: 'z_index',
+        sort: '-created',
       });
       return records.map(r => ({
         id: r.id,
@@ -81,7 +81,6 @@ export default function CampaignPage() {
         hexColumns: r.hex_columns || 50,
         hexRows: r.hex_rows || 50,
         hexOrientation: 'flat',
-        z: r.z_index,
         createdAt: r.created,
         updatedAt: r.updated,
       }));
@@ -157,7 +156,7 @@ export default function CampaignPage() {
     alert('Invitation link copied to chronicle clipboard!');
   };
 
-  const activeMap = maps?.find((m: MapLayer) => m.z === currentZ) || maps?.[0];
+  const activeMap = maps?.[0];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -188,17 +187,6 @@ export default function CampaignPage() {
             </svg>
             Character Profile
           </button>
-          <div className="flex bg-slate-800/50 rounded-lg p-1 border border-white/5">
-            {maps?.map((map: MapLayer) => (
-              <button
-                key={map.id}
-                onClick={() => setCurrentZ(map.z)}
-                className={`px-3 py-1 rounded text-[10px] font-black transition-all ${currentZ === map.z ? 'bg-indigo-500 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
-              >
-                LEVEL {map.z}
-              </button>
-            ))}
-          </div>
           {isDM && (
             <button
               onClick={() => setIsMapUploadModalOpen(true)}
@@ -247,7 +235,7 @@ export default function CampaignPage() {
 
           <div className="p-6 space-y-8 overflow-y-auto flex-1 custom-scrollbar">
             <section>
-              <WorldState />
+              <WorldState campaignId={campaignId || undefined} />
             </section>
 
             <section>

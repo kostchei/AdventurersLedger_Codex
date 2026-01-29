@@ -121,7 +121,7 @@
         "username": "",
         "avatarURL": ""
       },
-      "enabled": true
+      "enabled": false
     },
     "passwordAuth": {
       "enabled": true,
@@ -175,7 +175,7 @@
     "id": "_pb_users_auth_",
     "listRule": "id = @request.auth.id",
     "viewRule": "id = @request.auth.id",
-    "createRule": "",
+    "createRule": "@request.auth.id != ''",
     "updateRule": "id = @request.auth.id",
     "deleteRule": "id = @request.auth.id",
     "name": "users",
